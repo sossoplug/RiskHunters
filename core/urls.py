@@ -18,7 +18,8 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('rosetta/', include('rosetta.urls')),
-    path('', include('home.urls')),                 # include the home app urls
+    path('rosetta/',    include('rosetta.urls')),
+    path('',            include('home.urls')),                  # include the home app urls
+    path('users/',      include('users.urls')),                 # include the users app urls
 
 ]
