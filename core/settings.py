@@ -40,9 +40,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rosetta',
-    'home',
     'crispy_forms',
+    'crispy_bootstrap5',
     'users',
+    'home',
 ]
 
 MIDDLEWARE = [
@@ -106,12 +107,19 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# ========== EMAIL SMTP SETTINGS
+EMAIL_BACKEND       = 'django.core.mail.backends.console.EmailBackend'
+
+#  ========= AUTHENTIFIATIONS SETTINGS
+LOGIN_URL           = 'login'
+LOGOUT_URL          = 'logout'
+LOGIN_REDIRECT_URL  = 'home'
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 LOCALE_PATHS    = [os.path.join(BASE_DIR, 'locale')]
 
-LANGUAGES = [
+LANGUAGES       = [
     ('en', _('English')),
     ('fr', _('French')),
     ('es', _('Spanish')),
@@ -121,27 +129,29 @@ LANGUAGES = [
     ('pt', _('Portuguese')),
 ]
 
-LANGUAGE_CODE   = 'en-us'
+LANGUAGE_CODE                   = 'en-us'
 
-TIME_ZONE       = 'UTC'
+TIME_ZONE                       = 'UTC'
 
-USE_I18N        = True
+USE_I18N                        = True
 
-USE_L10N        = True
+USE_L10N                        = True
 
-USE_TZ          = True
+USE_TZ                          = True
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_URL              = '/static/'
+STATIC_URL                      = '/static/'
 
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD      = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD              = 'django.db.models.BigAutoField'
 
 
-CRISPY_TEMPLATE_PACK    = 'bootstrap4'
+CRISPY_ALLOWED_TEMPLATE_PACKS   = "bootstrap5"
+
+CRISPY_TEMPLATE_PACK            = "bootstrap5"
