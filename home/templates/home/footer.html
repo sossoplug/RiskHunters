@@ -1,0 +1,36 @@
+<!-- templates/footer.html -->
+
+{% load i18n %}
+
+<footer class="bg-light text-center text-lg-start">
+    <div class="container p-4">
+        <div class="row">
+            <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
+                <h5 class="text-uppercase">{% trans "About" %}</h5>
+                <p>
+                    {% trans "Riskhunters is a platform that helps gamblers assess and plan risk management." %}
+                </p>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                <h5 class="text-uppercase">{% trans "Links" %}</h5>
+                <ul class="list-unstyled mb-0">
+                    <li>
+                        <a href="{% url 'home' %}" class="text-dark">{% trans "Home" %}</a>
+                    </li>
+                    <!-- Add other footer links here -->
+                </ul>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                <h5 class="text-uppercase mb-0">{% trans "Contact" %}</h5>
+                <ul class="list-unstyled">
+                    <li>
+                        <a href="mailto:info@example.com" class="text-dark">info@example.com</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+        © 2023 Riskhunters
+    </div>
+</footer>

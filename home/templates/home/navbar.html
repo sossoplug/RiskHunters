@@ -1,0 +1,36 @@
+<!-- templates/navbar.html -->
+{% load i18n %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="{% url 'home' %}">{% trans "Riskhunters" %}</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'home' %}">{% trans "Home" %}</a>
+            </li>
+            <!-- Add other navigation links here -->
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {% trans "Language" %}
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="?lang=en">{% trans "English" %}</a>
+                    <a class="dropdown-item" href="?lang=fr">{% trans "French" %}</a>
+                    <a class="dropdown-item" href="?lang=es">{% trans "Spanish" %}</a>
+                    <a class="dropdown-item" href="?lang=ru">{% trans "Russian" %}</a>
+                    <a class="dropdown-item" href="?lang=de">{% trans "German" %}</a>
+                    <a class="dropdown-item" href="?lang=tr">{% trans "Turkish" %}</a>
+                    <a class="dropdown-item" href="?lang=pt">{% trans "Portuguese" %}</a>
+                </div>
+            </li>
+
+            <li class="nav-item">
+                <button class="btn btn-outline-secondary" onclick="toggleDarkMode()">{% trans "Toggle Dark Mode" %}</button>
+            </li>
+        </ul>
+    </div>
+</nav>
