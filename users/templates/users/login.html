@@ -12,6 +12,8 @@
           {{ form|crispy }}
           <button type="submit" class="btn btn-primary btn-block">{% trans "Login" %}</button>
         </form>
+        <p>{% trans "Don't have an account?" %} <a href="{% url 'register' %}" class="btn btn-light">{% trans "Register" %}</a></p>
+        <p><a href="{% url 'password_reset' %}">{% trans "Forgot your password?" %}</a></p>
       </div>
     </div>
   </div>
