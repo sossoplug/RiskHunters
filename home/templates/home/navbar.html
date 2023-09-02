@@ -23,8 +23,6 @@
                 <a class="nav-link" href="{% url 'register' %}">{% trans "Register" %}</a>
             </li>
             {% endif %}
-        </ul>
-        <ul class="navbar-nav ml-auto">
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     {% trans "Language" %}
@@ -33,10 +31,10 @@
                     <a class="dropdown-item" href="?lang=en">{% trans "English" %}</a>
                     <a class="dropdown-item" href="?lang=fr">{% trans "French" %}</a>
                     <a class="dropdown-item" href="?lang=es">{% trans "Spanish" %}</a>
+                    <a class="dropdown-item" href="?lang=pt">{% trans "Portuguese" %}</a>
                     <a class="dropdown-item" href="?lang=ru">{% trans "Russian" %}</a>
                     <a class="dropdown-item" href="?lang=de">{% trans "German" %}</a>
                     <a class="dropdown-item" href="?lang=tr">{% trans "Turkish" %}</a>
-                    <a class="dropdown-item" href="?lang=pt">{% trans "Portuguese" %}</a>
                 </div>
             </li>
 

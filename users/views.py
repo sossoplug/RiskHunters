@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import UserRegisterForm
 from django.utils.translation import gettext_lazy as _
-
+from core.helper import set_user_language
 
 
 def register(request):
@@ -17,6 +17,9 @@ def register(request):
     Returns:
         HttpResponse: The response object.
     """
+
+    set_user_language(request)
+
     if request.method == 'POST':
         form            = UserRegisterForm(request.POST)
 
