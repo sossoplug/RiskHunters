@@ -1,0 +1,77 @@
+{% load static i18n %}
+
+<!-- Your existing HTML head section here -->
+<head>
+    <!-- ... -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#calculateButton").click(function(e){
+                e.preventDefault();
+                $.ajax({
+                    url: '{% url "create_investment_plan" %}',
+                    type: 'POST',
+                    data: $('#calculateForm').serialize(),
+                    success: function(response){
+                        if(response.success){
+                            $("#resultsSection").removeClass('hidden');
+                            $("#amount_risked_per_position").text(response.amount_risked_per_position);
+                            $("#expectedGrowthPercent").text(response.expected_growth_percent);
+                            $("#growthInCash").text(response.growth_in_cash);
+                            $("#potentialCashLoss").text(response.potential_cash_loss);
+                            $("#potentialNetProfit").text(response.potential_net_profit);
+                            $("#profitFactor").text(response.profit_factor);
+                            $("#strategyType").text(response.strategy_type);
+                        } else {
+                            alert(response.message);
+                        }
+                    }
+                });
+            });
+
+            $("#saveButton").click(function(e){
+                e.preventDefault();
+                $("#saveFormSection").removeClass('hidden');
+            });
+
+            $("#saveFormButton").click(function(e){
+                e.preventDefault();
+                $.ajax({
+                    url: '{% url "save_investment_plan" %}',
+                    type: 'POST',
+                    data: $('#saveForm').serialize(),
+                    success: function(response){
+                        if(response.success){
+                            alert(response.message);
+                        } else {
+                            alert(response.message);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <form id="calculateForm" method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" id="calculateButton">{% trans "Calculate" %}</button>
+    </form>
+
+    <div id="resultsSection" class="hidden">
+        {% trans "Amount risked Per Position: " %}<span id="amount_risked_per_position"></span><br>
+        {% trans "Expected Growth Percent: " %}<span id="expectedGrowthPercent"></span><br>
+        {% trans "Growth in Cash: " %}<span id="growthInCash"></span><br>
+        {% trans "Potential Cash Loss: " %}<span id="potentialCashLoss"></span><br>
+        {% trans "Potential Net Profit: " %}<span id="potentialNetProfit"></span><br>
+        {% trans "Profit Factor: " %}<span id="profitFactor"></span><br>
+        {% trans "Strategy Type: " %}<span id="strategyType"></span><br>
+        <button type="button" id="saveButton">{% trans "Save" %}</button>
+    </div>
+
+    <div id="saveFormSection" class="hidden">
+        <form id="saveForm" method="POST">
+            {% csrf_token %}
+

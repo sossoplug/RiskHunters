@@ -1,41 +1,67 @@
 from django.contrib import admin
-from .models import Category, Strategy, Review, InvestmentPlan
+from strategies.models import MainCategory, Strategy, Review, InvestmentPlan, SubCategory, InvestmentPlanReview
+
 
 # ================ ADMIN ============================
-class CategoryAdmin(admin.ModelAdmin):
+class MainCategoryAdmin(admin.ModelAdmin):
     """
     Admin view for Category
     """
-    list_display    = ('name', 'description')
-    search_fields   = ['name', 'description']
+    list_display    = ('name', 'description', 'created', 'updated')
+    search_fields   = ('name',)
+    list_filter     = ('created', 'updated')
+
+
+class SubCategoryAdmin(admin.ModelAdmin):
+    """
+    Admin view for Category
+    """
+    list_display    = ('name', 'main_category', 'description', 'created', 'updated')
+    search_fields   = ('name', 'main_category__name',)
+    list_filter     = ('created', 'updated', 'main_category')
+
+
 
 class StrategyAdmin(admin.ModelAdmin):
     """
     Admin view for Strategy
     """
-    list_display    = ('name', 'description', 'ranking_terminated', 'ranking')
-    list_filter     = ('ranking_terminated', 'ranking')
-    search_fields   = ['name', 'description']
+    list_display    = ('name', 'user', 'ranking', 'created', 'updated')
+    search_fields   = ('name', 'user__username',)
+    list_filter     = ('created', 'updated', 'ranking_terminated')
+
 
 class ReviewAdmin(admin.ModelAdmin):
     """
     Admin view for Review
     """
-    list_display    = ('user', 'strategy', 'rating', 'review')
-    list_filter     = ('rating',)
-    search_fields   = ['review']
+    list_display    = ('user', 'strategy', 'rating', 'created', 'updated')
+    search_fields   = ('user__username', 'strategy__name',)
+    list_filter     = ('created', 'updated', 'rating')
+
 
 class InvestmentPlanAdmin(admin.ModelAdmin):
     """
     Admin view for InvestmentPlan
     """
-    list_display    = ('user', 'name', 'category', 'initial_capital', 'risk', 'reward', 'risk_percent_per_position', 'numbers_of_position', 'win_rate_ratio', 'strategy_type', 'expected_growth_percent', 'growth_in_cash')
-    list_filter     = ('category', 'strategy_type')
-    search_fields   = ['name']
+    list_display    = ('name', 'user', 'category', 'initial_capital', 'risk', 'reward', 'created', 'updated')
+    search_fields   = ('name', 'user__username', 'category__name',)
+    list_filter     = ('created', 'updated', 'public', 'strategy_type')
+
+
+class InvestmentPlanReviewAdmin(admin.ModelAdmin):
+    """
+        Admin view for InvestmentPlanReviewAdmin
+    """
+    list_display    = ('user', 'investment_plan', 'rating', 'created', 'updated')
+    search_fields   = ('user__username', 'investment_plan__name',)
+    list_filter     = ('created', 'updated', 'rating')
 
 # Register your models here.
-admin.site.register(Category, CategoryAdmin)
+admin.site.register(MainCategory, MainCategoryAdmin)
+admin.site.register(SubCategory, SubCategoryAdmin)
 admin.site.register(Strategy, StrategyAdmin)
 admin.site.register(Review, ReviewAdmin)
 admin.site.register(InvestmentPlan, InvestmentPlanAdmin)
+admin.site.register(InvestmentPlanReview, InvestmentPlanReviewAdmin)
 # =========================================================

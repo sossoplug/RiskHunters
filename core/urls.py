@@ -15,11 +15,35 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls.i18n import i18n_patterns
 
-urlpatterns = [
-    path('admin/', admin.site.urls),
+
+from django.conf.urls import ( handler400, handler403, handler404, handler500)
+
+
+handler400              = 'core.views.custom_bad_request_view'
+handler403              = 'core.views.custom_permission_denied_view'
+handler404              = 'core.views.custom_page_not_found_view'
+handler500              = 'core.views.custom_error_view'
+
+
+
+urlpatterns             = [
+    path('admin/',      admin.site.urls),
     path('rosetta/',    include('rosetta.urls')),
     path('',            include('home.urls')),                  # include the home app urls
     path('users/',      include('users.urls')),                 # include the users app urls
+    path('strategy/',   include('strategies.urls')),                 # include the users app urls
+    path('i18n/',       include('django.conf.urls.i18n')),
 
 ]
+
+urlpatterns             += i18n_patterns(
+    path('', include('home.urls')),
+
+)
+
+
+admin.site.index_title="SAT - Admin"
+admin.site.site_header="SAT - Administration"
+admin.site.site_title=" "

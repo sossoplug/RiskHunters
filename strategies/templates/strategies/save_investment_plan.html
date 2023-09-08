@@ -1,0 +1,38 @@
+{% load static %}
+
+<html>
+<head>
+    <title>Save Investment Plan</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#saveForm').submit(function(e) {
+                e.preventDefault();
+                
+                $.ajax({
+                    url: "{% url 'save_investment_plan' %}",
+                    method: 'POST',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        // If the save is successful, redirect to a details page or some other page
+                        alert('Investment Plan Saved Successfully');
+                    },
+                    error: function(response) {
+                        // Handle error here
+                        alert('Error in saving the plan');
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Save Investment Plan</h1>
+    <form id="saveForm">
+        {% csrf_token %}
+        <!-- Your form fields here -->
+        {{ form.as_p }}
+        <button type="submit">Save</button>
+    </form>
+</body>
+</html>

@@ -2,3 +2,5 @@ django
 django-rosetta
 django-crispy-forms
 crispy-bootstrap5
+pillow
+http://127.0.0.1:8000/strategy/create_investment_plan/
