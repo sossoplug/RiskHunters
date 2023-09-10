@@ -1,77 +1,111 @@
-{% load static i18n %}
+{% extends "home/base.html" %}
 
-<!-- Your existing HTML head section here -->
-<head>
-    <!-- ... -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script>
-        $(document).ready(function(){
-            $("#calculateButton").click(function(e){
-                e.preventDefault();
-                $.ajax({
-                    url: '{% url "create_investment_plan" %}',
-                    type: 'POST',
-                    data: $('#calculateForm').serialize(),
-                    success: function(response){
-                        if(response.success){
-                            $("#resultsSection").removeClass('hidden');
-                            $("#amount_risked_per_position").text(response.amount_risked_per_position);
-                            $("#expectedGrowthPercent").text(response.expected_growth_percent);
-                            $("#growthInCash").text(response.growth_in_cash);
-                            $("#potentialCashLoss").text(response.potential_cash_loss);
-                            $("#potentialNetProfit").text(response.potential_net_profit);
-                            $("#profitFactor").text(response.profit_factor);
-                            $("#strategyType").text(response.strategy_type);
-                        } else {
-                            alert(response.message);
-                        }
-                    }
-                });
-            });
+{% load crispy_forms_tags i18n %}
 
-            $("#saveButton").click(function(e){
-                e.preventDefault();
-                $("#saveFormSection").removeClass('hidden');
-            });
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
 
-            $("#saveFormButton").click(function(e){
-                e.preventDefault();
-                $.ajax({
-                    url: '{% url "save_investment_plan" %}',
-                    type: 'POST',
-                    data: $('#saveForm').serialize(),
-                    success: function(response){
-                        if(response.success){
-                            alert(response.message);
-                        } else {
-                            alert(response.message);
-                        }
-                    }
-                });
-            });
-        });
-    </script>
-</head>
+        <div class="col-md-9">
+            <!-- This is the right container taking up 3/4 of the space -->
+            <nav>
+                <div class="nav bg-dark nav-tabs" id="nav-tab" role="tablist">
+                    {% for model in models %}
+                        {% if forloop.first %}
+                    <button aria-controls="nav-{{model.slug}}" aria-selected="true" class="nav-link active"
+                            data-bs-target="#nav-{{model.slug}}"
+                            data-bs-toggle="tab" id="nav-{{model.slug}}-tab" role="tab" type="button">{{model.name}}
+                    </button>
+                        {% else %}
+                    <button aria-controls="nav-{{model.slug}}" aria-selected="false" class="nav-link"
+                            data-bs-target="#nav-{{model.slug}}"
+                            data-bs-toggle="tab" id="nav-{{model.slug}}-tab" role="tab" type="button">{{model.name}}
+                    </button>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </nav>
+            <div class="tab-content center" id="nav-tabContent">
+                {% for model in models %}
+                <div aria-labelledby="nav-{{model.slug}}-tab" id="nav-{{model.slug}}" role="tabpanel"
+                     {% if forloop.first %} class="tab-pane fade show active" tabindex="0" {% else %} class="tab-pane fade" {% endif %} >
+                    <div class="row">
+                        <div class="col-md-9">
+                            <div class="tab-content" id="v-pills-tabContent">
+                                <div aria-labelledby="{{model.slug}}-tab"   class="tab-pane active" id="{{model.slug}}-description" role="tabpanel">
+                                    <div class="mx-auto p-2">
+                                        <h1>{{model.nickname}}</h1>
+                                        {{model.description}}
+                                    </div>
+                                </div>
+                                <div aria-labelledby="{{model.slug}}-tab"   class="tab-pane fade"   id="{{model.slug}}-pros"        role="tabpanel">
+                                    {% for pro in model.pros.all %}
+                                        <div class="mx-auto p-2">
+                                            <h5>{{ pro.name }}</h5>
+                                            <p>{{ pro.description }}</p>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <div aria-labelledby="{{model.slug}}-tab"   class="tab-pane fade"   id="{{model.slug}}-cons"        role="tabpanel">
+                                    {% for con in model.cons.all %}
+                                        <div class="mx-auto p-2">
+                                            <h5>{{ con.name }}</h5>
+                                            <p>{{ con.description }}</p>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <div aria-labelledby="{{model.slug}}-tab"   class="tab-pane fade"   id="{{model.slug}}-example"     role="tabpanel">
+                                    <div class="mx-auto p-2">
+                                        {{model.example | safe}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div aria-orientation="vertical" class="nav flex-column nav-tabs bg-dark" id="v-pills-tab"role="tablist">
+                                <button aria-controls="v-pills-home"     aria-selected="true"    class="nav-link active" data-toggle="pill" href="#{{model.slug}}-description"   id="{{model.slug}}-description"     role="tab">{% trans "Description" %}</button>
+                                <button aria-controls="v-pills-profile"  aria-selected="false"   class="nav-link btn"        data-toggle="pill" href="#{{model.slug}}-pros"          id="{{model.slug}}-pros"            role="tab">{% trans "Pros" %}</button>
+                                <button aria-controls="v-pills-messages" aria-selected="false"   class="nav-link"        data-toggle="pill" href="#{{model.slug}}-cons"          id="{{model.slug}}-cons"            role="tab">{% trans "Cons" %}</button>
+                                <button aria-controls="v-pills-settings" aria-selected="false"   class="nav-link"        data-toggle="pill" href="#{{model.slug}}-example"       id="{{model.slug}}-example"         role="tab">{% trans "Example" %}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
 
-<body>
-    <form id="calculateForm" method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" id="calculateButton">{% trans "Calculate" %}</button>
-    </form>
+        <div class="col-md-3 mx-auto">
+            <!-- This is the left container taking up 1/4 of the space -->
+            <form data-create-investment-plan-url="{% url 'create_investment_plan' %}"
+                  data-save-investment-plan-url="{% url 'save_investment_plan' %}" id="calculateForm"
+                  method="POST">
+                {% csrf_token %}
+                {{ form | crispy }}
+                <button class="btn btn-info" id="calculateButton" type="submit">{% trans "Calculate" %}</button>
+            </form>
+        </div>
+    </div>
 
-    <div id="resultsSection" class="hidden">
+    <div id="resultsSection" style="display: none;">
         {% trans "Amount risked Per Position: " %}<span id="amount_risked_per_position"></span><br>
         {% trans "Expected Growth Percent: " %}<span id="expectedGrowthPercent"></span><br>
-        {% trans "Growth in Cash: " %}<span id="growthInCash"></span><br>
+        {% trans "ExpectedGrowth in Cash: " %}<span id="growthInCash"></span><br>
         {% trans "Potential Cash Loss: " %}<span id="potentialCashLoss"></span><br>
         {% trans "Potential Net Profit: " %}<span id="potentialNetProfit"></span><br>
         {% trans "Profit Factor: " %}<span id="profitFactor"></span><br>
         {% trans "Strategy Type: " %}<span id="strategyType"></span><br>
-        <button type="button" id="saveButton">{% trans "Save" %}</button>
+        <button id="saveButton" type="button">{% trans "Save" %}</button>
     </div>
 
-    <div id="saveFormSection" class="hidden">
-        <form id="saveForm" method="POST">
+    <div id="saveFormSection" style="display: none;">
+        <h2>Save Investment Plan</h2>
+        <form id="saveForm">
             {% csrf_token %}
+            <!-- Include fields from SaveInvestmentPlanForm here -->
+            <button type="submit">Save Plan</button>
+        </form>
+    </div>
+</div>
 
+{% endblock %}

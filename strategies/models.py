@@ -4,6 +4,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User
+from django.utils.text import slugify
 
 # ================ MAIN CATEGORY =========================
 class MainCategory(models.Model):
@@ -255,5 +256,89 @@ class InvestmentPlanReview(models.Model):
     def __str__(self):
         return f"Review by {self.user} - {self.rating}/5"
 # =========================================================
+
+
+
+# ============================ PROS MODEL ============================
+class Pros(models.Model):
+    """
+    Model representing an individual pro associated with a growth model.
+
+    Attributes:
+        name (CharField):       The name of the pro.
+        description (TextField): The detailed description of the pro.
+    """
+    name                        = models.CharField(max_length=255, verbose_name=_("Name"))
+    description                 = models.TextField(verbose_name=_("Description"))
+    created                     = models.DateTimeField(auto_now_add=True, null=True, verbose_name=_("Created At"))
+    updated                     = models.DateTimeField(auto_now=True, null=True, verbose_name=_("Updated At"))
+
+    class Meta:
+        verbose_name            = _("Pro")
+        verbose_name_plural     = _("Pros")
+        ordering                = ['name']
+
+    def __str__(self):
+        return self.name
+
+
+# ============================ CONS MODEL ============================
+class Cons(models.Model):
+    """
+    Model representing an individual con associated with a growth model.
+
+    Attributes:
+        name (CharField):       The name of the con.
+        description (TextField): The detailed description of the con.
+    """
+    name                        = models.CharField(max_length=255, verbose_name=_("Name"))
+    description                 = models.TextField(verbose_name=_("Description"))
+    created                     = models.DateTimeField(auto_now_add=True,  null=True, verbose_name=_("Created At"))
+    updated                     = models.DateTimeField(auto_now=True, null=True, verbose_name=_("Updated At"))
+
+    class Meta:
+        verbose_name            = _("Con")
+        verbose_name_plural     = _("Cons")
+        ordering                = ['name']
+
+    def __str__(self):
+        return self.name
+
+
+# ============================ GROWTH MODEL ============================
+class GrowthModel(models.Model):
+    """
+    Model representing a growth model with associated pros and cons.
+
+    Attributes:
+        name (CharField):  The name of the growth model.
+        description (TextField): The detailed description of the growth model.
+        pros (ManyToManyField): The associated pros of the growth model.
+        cons (ManyToManyField): The associated cons of the growth model.
+    """
+    name                        = models.CharField(max_length=255, verbose_name=_("Name"))
+    nickname                    = models.CharField(max_length=255, null=True, verbose_name=_("Nickname"))
+    slug                        = models.SlugField(max_length=255, unique=True, null=True, blank=True, verbose_name=_("Slug"))
+    description                 = models.TextField(verbose_name=_("Description"))
+    pros                        = models.ManyToManyField(Pros, related_name='growth_models', verbose_name=_("Pros"))
+    cons                        = models.ManyToManyField(Cons, related_name='growth_models', verbose_name=_("Cons"))
+    example                     = models.TextField(verbose_name=_("Example"), null=True, help_text=_("You can use HTML tags for formatting"))
+    calculable                  = models.BooleanField(default=False, null=True, verbose_name=_("Calculable"))
+    created                     = models.DateTimeField(auto_now_add=True, null=True, verbose_name=_("Created At"))
+    updated                     = models.DateTimeField(auto_now=True, null=True, verbose_name=_("Updated At"))
+
+    class Meta:
+        verbose_name            = _("Growth Model")
+        verbose_name_plural     = _("Growth Models")
+        ordering                = ['name']
+
+    def __str__(self):
+        return self.name
+
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
 

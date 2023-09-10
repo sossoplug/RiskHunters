@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.utils.translation import gettext_lazy as _
-from .models import InvestmentPlan
+from .models import InvestmentPlan, GrowthModel
 from .forms import InvestmentPlanCalculationForm, SaveInvestmentPlanForm
 
 # Create your views here.
@@ -20,7 +20,6 @@ def create_investment_plan(request):
         if request.method == 'POST':
             form = InvestmentPlanCalculationForm(request.POST)
             if form.is_valid():
-                print("YESSSSSS")
                 # ... (Perform necessary calculations)
                 # Assume some pseudo calculations here. Please replace with the actual formulae.
 
@@ -51,8 +50,12 @@ def create_investment_plan(request):
                 response_data = {'success': False, 'message': _('Form is not valid')}
                 return JsonResponse(response_data)
         else:
-            form = InvestmentPlanCalculationForm()
-            return render(request, 'strategies/calculate_investment_plan.html', {'form': form})
+            form                                    = InvestmentPlanCalculationForm()
+            models                                  = GrowthModel.objects.all().order_by('-calculable')
+            context                                 =  {'form': form,
+                                                        'title': _('Investment Plan Estimation'),
+                                                        'models': models}
+            return render(request, 'strategies/calculate_investment_plan.html', context )
 
     except Exception as e:
         response_data = {'success': False, 'message': str(e)}
